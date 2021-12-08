@@ -5,11 +5,11 @@ public class MySort{
         int[] arr2 = new int[]{1,2,3,4,5,6,7,8};
         int[] arr3 = new int[]{2,8,7,1,3,5,6,4};
 
-        mergeSort(arr1, 0, arr1.length - 1);
+        heapSort(arr1);
         System.out.println(Arrays.toString(arr1));
-        mergeSort(arr2, 0, arr2.length - 1);
+        heapSort(arr2);
         System.out.println(Arrays.toString(arr2));
-        mergeSort(arr3, 0, arr3.length - 1);
+        heapSort(arr3);
         System.out.println(Arrays.toString(arr3));
     }
     public static void swap(int[] arr, int i, int j){
@@ -109,5 +109,58 @@ public class MySort{
         }
     }
     //Heap Sort : All Cases O(nLogn)
-    
+    public static void heapSort(int[] arr){
+        Heap A = new Heap(arr);
+        buildMaxHeap(A);
+        for(int i=A.length-1; i>=1; i--){
+            // swap(arr, 0, i);
+            int temp = A.arr[0];
+            A.arr[0] = A.arr[i];
+            A.arr[i] = temp;
+            A.heapSize = A.heapSize - 1;
+            maxHeapify(A, 0);//index-1
+        }
+    }
+    static class Heap{
+        public int[] arr;
+        public int length;
+        public int heapSize;
+        Heap(int[] arr){
+            this.arr = arr;
+            this.length = arr.length;
+            this.heapSize = arr.length;
+        }
+    }
+    public static void buildMaxHeap(Heap A){
+        // A.heapSize = A.length;
+        for(int i=A.length/2-1; i>=0; i--){
+            maxHeapify(A, i);
+        }
+    }
+    public static void maxHeapify(Heap A, int i){
+        int l = left(i+1)-1;//managing index
+        int r = right(i+1)-1;//managing index
+        int largest = 0;
+        if(l<=A.heapSize-1 && A.arr[l]>A.arr[i])
+            largest = l;
+        else largest = i;
+        if(r<=A.heapSize-1 && A.arr[r]>A.arr[largest])
+            largest = r;
+        if(largest != i){
+            // swap(arr, i, largest);
+            int temp = A.arr[i];
+            A.arr[i] = A.arr[largest];
+            A.arr[largest] = temp;
+            maxHeapify(A, largest);
+        }
+    }
+    public static int parent(int i){
+        return i/2;
+    }
+    public static int left(int i){
+        return 2*i;
+    }
+    public static int right(int i){
+        return 2*i+1;
+    }
 }
